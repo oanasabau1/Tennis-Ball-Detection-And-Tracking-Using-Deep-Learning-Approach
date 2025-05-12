@@ -45,7 +45,7 @@ validation_dataset = TennisCourtKeyPointsDataset("D:\\tennis_thesis\\data\\image
 train_loader = DataLoader(train_dataset, batch_size=8, shuffle=True)
 validation_loader = DataLoader(validation_dataset, batch_size=8, shuffle=True)
 
-model = models.resnet50(weights=ResNet50_Weights.DEFAULT)
+model = models.resnet50(weights=None)
 model.fc = torch.nn.Linear(model.fc.in_features, 14*2)
 model = model.to(device)
 

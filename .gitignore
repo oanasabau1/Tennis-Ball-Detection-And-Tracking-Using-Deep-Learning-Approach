@@ -13,6 +13,8 @@ My First Project/
 runs/
 Tennis Ball Detection/
 models/
+downloaded_youtube_videos/
+assets/
 
 # Python cache and environments
 __pycache__/

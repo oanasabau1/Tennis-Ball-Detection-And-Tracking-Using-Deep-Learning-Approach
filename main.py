@@ -9,8 +9,8 @@ from bounding_boxes import measure_distance
 from utils import convert_pixel_distance_to_meters
 
 
-def main():
-    input_video_path = "input_videos/input_video.mp4"
+def main(video_path):
+    input_video_path = f"input_videos/{video_path}.mp4"
     video_frames = read_video(input_video_path)
 
     # Track tennis ball
@@ -34,13 +34,8 @@ def main():
         tennis_ball_detections,
         court_keypoints)
 
-    # Initialize player stats (using ball position to guess who hit)
-    player_stats = {
-        1: {'shots': 0, 'total_speed': 0},
-        2: {'shots': 0, 'total_speed': 0}
-    }
-
-    court_center_y = (mini_court.court_start_y + mini_court.court_end_y) / 2
+    # Track only shot speeds
+    shot_speeds = []
 
     for tennis_ball_shot_index in range(len(tennis_ball_shot_frames) - 1):
         start_frame = tennis_ball_shot_frames[tennis_ball_shot_index]
@@ -60,24 +55,17 @@ def main():
             mini_court.get_width_of_mini_court()
         )
         speed_of_the_ball_shot = distance_covered_by_ball_in_meters / tennis_ball_shot_time_in_seconds * 3.6
+        shot_speeds.append(speed_of_the_ball_shot)
 
-        # Estimate which player hit the shot based on y-position
-        if start_pos[1] > court_center_y:
-            player_who_hit = 1  # bottom
-        else:
-            player_who_hit = 2  # top
+        print(f"Shot {tennis_ball_shot_index + 1} | Speed: {speed_of_the_ball_shot:.2f} km/h")
 
-        player_stats[player_who_hit]['shots'] += 1
-        player_stats[player_who_hit]['total_speed'] += speed_of_the_ball_shot
-
-        print(f"Shot {tennis_ball_shot_index + 1} | Player {player_who_hit} | Speed: {speed_of_the_ball_shot:.2f} km/h")
-
-    # Display final stats
-    print("\n=== Player Shot Stats (Estimated) ===")
-    for pid in [1, 2]:
-        shots = player_stats[pid]['shots']
-        avg_speed = player_stats[pid]['total_speed'] / shots if shots > 0 else 0
-        print(f"Player {pid}: {shots} shots, average speed: {avg_speed:.2f} km/h")
+    # Display average shot speed
+    if shot_speeds:
+        avg_speed = sum(shot_speeds) / len(shot_speeds)
+        print(f"\n=== Shot Stats ===")
+        print(f"Number of shots: {len(shot_speeds)}")
+        print(f"Average speed: {avg_speed:.2f} km/h")
+        print(f"Max speed: {max(shot_speeds):.2f} km/h")
 
     # Draw output videos
     output_video_frames = tennis_ball_tracker.draw_bounding_boxes(video_frames, tennis_ball_detections)
@@ -93,9 +81,14 @@ def main():
     for i, frame in enumerate(output_video_frames):
         cv2.putText(frame, f"Frame: {i}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
 
-    save_video(output_video_frames, "output_videos/output_video.avi")
-    save_video(mini_court_frames, "output_videos/mini_court_video.avi")
+    save_video(output_video_frames, f"output_videos/{video_path}.avi")
+    save_video(mini_court_frames, f"output_videos/mini_court_for_{video_path}.avi")
 
 
 if __name__ == "__main__":
-    main()
+    import sys
+    if len(sys.argv) < 2:
+        print("Usage: python main.py <video_name>")
+    else:
+        video_name = sys.argv[1]
+        main(video_name)
