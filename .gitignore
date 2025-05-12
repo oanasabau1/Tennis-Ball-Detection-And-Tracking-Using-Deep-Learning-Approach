@@ -1,0 +1,23 @@
+# Ignore video files
+*.mp4
+*.avi
+*.mov
+
+# Ignore folders
+input_videos/
+output_videos/
+tracker_stub/
+data/
+combined_dataset/
+My First Project/
+runs/
+Tennis Ball Detection/
+models/
+
+# Python cache and environments
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env/
+.venv/
