@@ -1,5 +1,4 @@
 import ttkbootstrap as ttk
-import tkinter as tk
 from ttkbootstrap.constants import *
 from tkinter import filedialog, messagebox, scrolledtext
 import subprocess
@@ -32,7 +31,6 @@ class TennisAnalysisApp:
         style = ttk.Style()
         style.configure("TFrame", padding=10)
         style.configure("Title.TLabel", font=("Verdana", 34, "bold"))
-        style.configure("Subtitle.TLabel", font=("Verdana", 16))
 
         main_frame = ttk.Frame(self.root, style="TFrame")
         main_frame.pack(fill="both", expand=True)
@@ -84,13 +82,6 @@ class TennisAnalysisApp:
         )
         title.pack(pady=25)
 
-        subtitle = ttk.Label(
-            content_frame,
-            text="Analyze your tennis matches with AI-powered insights",
-            style="Subtitle.TLabel"
-        )
-        subtitle.pack(pady=15)
-
         button_frame = ttk.Frame(content_frame)
         button_frame.pack(pady=30)
         start_button = ttk.Button(
@@ -105,41 +96,35 @@ class TennisAnalysisApp:
     def create_main_ui(self):
         self.clear_root()
 
+        # Configure styles
         style = ttk.Style()
         style.configure("TLabel", font=("Verdana", 12))
-        style.configure("Exit.TButton", font=("Verdana", 12, "bold"))
 
+        # Main container
         main_frame = ttk.Frame(self.root)
         main_frame.pack(fill="both", expand=True, padx=20, pady=20)
 
-        # Add an EXIT button at the top-right with proper styling
-        exit_button = ttk.Button(
-            main_frame,
-            text="EXIT",
-            bootstyle="danger",
-            command=self.root.quit,
-            width=10,
-            style="Exit.TButton"  # Use the style name instead of direct font parameter
-        )
-        exit_button.place(relx=0.98, rely=0.02, anchor="ne")
+        # Top controls section
+        top_frame = ttk.Frame(main_frame)
+        top_frame.pack(fill="x", pady=10)
 
-        # Rest of the method remains unchanged
-        input_frame = ttk.Frame(main_frame)
-        input_frame.pack(fill="x", pady=10)
+        # Left side controls
+        controls_frame = ttk.Frame(top_frame)
+        controls_frame.pack(side="left", padx=(0, 20))
 
-        button_frame = ttk.Frame(input_frame)
-        button_frame.pack(side="left", padx=(0, 25))
+        button_frame = ttk.Frame(controls_frame)
+        button_frame.pack(fill="x")
 
         ttk.Button(button_frame, text="Load Video", command=self.load_video,
                    bootstyle="primary-outline", width=25).pack(pady=5)
         ttk.Button(button_frame, text="Download From YouTube", command=self.open_youtube_window,
                    bootstyle="info-outline", width=25).pack(pady=5)
-
         self.btn_run = ttk.Button(button_frame, text="Run Analysis", command=self.run_analysis,
                                   bootstyle="success-outline", width=25)
         self.btn_run.pack(pady=5)
 
-        info_frame = ttk.Frame(input_frame)
+        # Right side status info
+        info_frame = ttk.Frame(top_frame)
         info_frame.pack(side="left", fill="x", expand=True)
 
         self.label_video = ttk.Label(info_frame, text="No video selected.")
@@ -147,7 +132,40 @@ class TennisAnalysisApp:
         self.status_label = ttk.Label(info_frame, text="")
         self.status_label.pack(anchor="w", pady=5)
 
-        # Shot speed display
+        # Middle section - Videos
+        video_container = ttk.LabelFrame(main_frame, text="Video Analysis", bootstyle="default")
+        video_container.pack(fill="both", expand=True, pady=10)
+
+        # Center the videos with a flexible layout
+        video_frame = ttk.Frame(video_container)
+        video_frame.pack(fill="both", expand=True)
+        video_frame.columnconfigure(0, weight=1)
+        video_frame.columnconfigure(1, weight=1)
+        video_frame.rowconfigure(0, weight=1)
+
+        # Output video (left)
+        output_frame = ttk.Frame(video_frame)
+        output_frame.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
+        output_frame.columnconfigure(0, weight=1)
+        output_frame.rowconfigure(0, weight=0)
+        output_frame.rowconfigure(1, weight=1)
+
+        ttk.Label(output_frame, text="Output Video").grid(row=0, column=0, sticky="w")
+        self.output_label = ttk.Label(output_frame, borderwidth=2, relief="groove")
+        self.output_label.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
+
+        # Court analysis (right)
+        mini_frame = ttk.Frame(video_frame)
+        mini_frame.grid(row=0, column=1, sticky="nsew", padx=10, pady=10)
+        mini_frame.columnconfigure(0, weight=1)
+        mini_frame.rowconfigure(0, weight=0)
+        mini_frame.rowconfigure(1, weight=1)
+
+        ttk.Label(mini_frame, text="Court Analysis").grid(row=0, column=0, sticky="w")
+        self.mini_label = ttk.Label(mini_frame, borderwidth=2, relief="groove")
+        self.mini_label.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
+
+        # Bottom section - Analysis results
         speed_frame = ttk.LabelFrame(main_frame, text="Shot Analysis", bootstyle="primary")
         speed_frame.pack(fill="x", pady=10)
 
@@ -157,24 +175,7 @@ class TennisAnalysisApp:
         )
         self.speed_box.pack(padx=10, pady=10, fill='both')
 
-        video_container = ttk.LabelFrame(main_frame, text="Video Analysis", bootstyle="default")
-        video_container.pack(fill="both", expand=True, pady=10)
-
-        video_frame = ttk.Frame(video_container)
-        video_frame.pack(fill="both", expand=True, padx=10, pady=10)
-
-        output_viewer = ttk.LabelFrame(video_frame, text="Output Video")
-        output_viewer.pack(side="left", padx=10, fill="both", expand=True)
-
-        self.output_label = ttk.Label(output_viewer)
-        self.output_label.pack(padx=10, pady=10, fill="both", expand=True)
-
-        mini_viewer = ttk.LabelFrame(video_frame, text="Court Analysis")
-        mini_viewer.pack(side="right", padx=10, fill="both", expand=True)
-
-        self.mini_label = ttk.Label(mini_viewer)
-        self.mini_label.pack(padx=10, pady=10, fill="both", expand=True)
-
+        # Set up event handlers
         self.root.bind("<Escape>",
                        lambda e: self.root.protocol("WM_RESIZE_WINDOW", self.root.attributes('-fullscreen', False)))
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
@@ -289,7 +290,7 @@ class TennisAnalysisApp:
             return
 
         self.speed_box.delete(1.0, 'end')
-        self.speed_box.insert('end', f"Running analysis on: {self.video_name}\n\n")
+        self.speed_box.insert('end', f"Running analysis_of_tennis_ball on: {self.video_name}\n\n")
         self.status_label.config(text="Processing... Please wait ⏳")
         self.btn_run.config(state='disabled')
 
@@ -298,50 +299,47 @@ class TennisAnalysisApp:
 
     def _process_video(self):
         try:
-            # Clear the speed box
             self.speed_box.delete(1.0, 'end')
 
             result = subprocess.run([
                 sys.executable, "main.py", self.video_name
             ], capture_output=True, text=True)
 
-            # Extract and display speed information
             shot_info = []
 
             for line in result.stdout.splitlines():
-                # Look for shot speed information in the format "Shot X | Speed: Y km/h"
                 if "Shot" in line and "Speed" in line:
                     shot_info.append(line)
                 elif "=== Shot Stats ===" in line:
                     shot_info.append("\n" + line)
-                elif "Number of shots:" in line or "Average speed:" in line or "Max speed:" in line:
+                elif "Number of shots:" in line or "Average speed:" in line:
                     shot_info.append(line)
 
             self.speed_box.insert('end', "\n".join(shot_info))
 
             if result.stderr:
-                self.status_label.config(text="❌ Warnings during analysis.", foreground="orange")
+                self.status_label.config(text="Warnings during analysis_of_tennis_ball.", foreground="orange")
 
             if result.returncode != 0:
-                self.status_label.config(text="❌ Analysis failed.", foreground="red")
+                self.status_label.config(text="Analysis failed.", foreground="red")
                 return
 
-            self.status_label.config(text="✅ Analysis complete.", foreground="green")
+            self.status_label.config(text="Analysis complete.", foreground="green")
             self.play_both_videos()
         except Exception as e:
-            self.speed_box.insert('end', f"\n❌ Error: {e}")
-            self.status_label.config(text="❌ Error occurred.", foreground="red")
+            self.speed_box.insert('end', f"\nError: {e}")
+            self.status_label.config(text="Error occurred.", foreground="red")
         finally:
             self.btn_run.config(state='normal')
 
     def play_both_videos(self):
         self.release_resources()
 
-        output_path = f"output_videos/{self.video_name}.avi"
-        mini_path = f"output_videos/mini_court_for_{self.video_name}.avi"
+        output_path = f"outputs/{self.video_name}/{self.video_name}.avi"
+        mini_path = f"outputs/{self.video_name}/mini_court_for_{self.video_name}.avi"
 
         if not os.path.exists(output_path) or not os.path.exists(mini_path):
-            self.speed_box.insert('end', "❌ Processed videos not found.\n")
+            self.speed_box.insert('end', "Processed videos not found.\n")
             return
 
         self.output_cap = cv2.VideoCapture(output_path)
@@ -372,7 +370,6 @@ class TennisAnalysisApp:
         if ret1 or ret2:
             self.root.after(40, self.show_frames)
         else:
-            # When videos end, restart them
             self.output_cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
             self.mini_cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
             self.root.after(40, self.show_frames)
