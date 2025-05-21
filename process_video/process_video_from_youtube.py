@@ -81,6 +81,6 @@ if __name__ == "__main__":
     custom_name = sys.argv[2] if len(sys.argv) > 2 else None
     downloaded_path = download_youtube_video(url, custom_name=custom_name)
     if downloaded_path:
-        trimmed_path = trim_video(downloaded_path, skip_seconds=2)
+        trimmed_path = trim_video(downloaded_path, skip_seconds=0)
         if trimmed_path:
             print(f"[TRIMMED_PATH]{trimmed_path}")

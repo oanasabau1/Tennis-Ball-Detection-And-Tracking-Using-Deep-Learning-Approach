@@ -2,7 +2,6 @@ import cv2
 import torch
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms, models
-from torchvision.models import ResNet50_Weights
 import json
 import numpy as np
 

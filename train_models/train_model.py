@@ -2,7 +2,7 @@ from ultralytics import YOLO
 
 if __name__ == "__main__":
 
-    model = YOLO("models/yolov8m.pt")
+    model = YOLO("../models/yolov8m.pt")
 
     results = model.train(
         data="D:\\tennis_thesis\\combined_dataset\\data.yaml",
