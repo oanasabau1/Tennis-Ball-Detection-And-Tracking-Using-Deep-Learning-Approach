@@ -19,8 +19,9 @@ def main(video_path):
         model_path="D:\\tennis_thesis\\runs\\detect\\tennis_ball_detection_yolov5m.pt\\weights\\best.pt"
     )
     stub_path = f"tracker_stub/tennis_ball_detections_for_{video_path}.pkl"
+    read_from_stub = os.path.exists(stub_path)
     tennis_ball_detections = tennis_ball_tracker.detect_frames(
-        video_frames, read_from_stub=True, stub_path=stub_path
+        video_frames, read_from_stub=read_from_stub, stub_path=stub_path
     )
     tennis_ball_detections = tennis_ball_tracker.interpolate_tennis_ball_positions(tennis_ball_detections)
 
@@ -79,6 +80,7 @@ def main(video_path):
 
     create_heatmap_visualization(video_name=video_path, output_dir=output_dir)
     hits = detect_ball_hits(video_name=video_path)
+
 
 if __name__ == "__main__":
     import sys
