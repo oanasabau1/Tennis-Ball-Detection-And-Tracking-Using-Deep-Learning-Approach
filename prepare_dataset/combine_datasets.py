@@ -4,10 +4,10 @@ import yaml
 
 
 datasets = {
-    "dataset1": "../Tennis Ball Detection",
-    "dataset2": "../My First Project"
+    "dataset1": "../tennis_ball_dataset_1",
+    "dataset2": "../tennis_ball_dataset_2",
 }
-combined_path = "../combined_dataset"
+combined_path = "../combined_tennis_ball_dataset"
 splits = ["train", "valid", "test"]
 class_names = ["tennis ball"]
 

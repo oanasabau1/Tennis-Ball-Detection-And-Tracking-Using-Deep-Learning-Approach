@@ -9,12 +9,13 @@ outputs/
 tracker_stub/
 data/
 combined_dataset/
-My First Project/
 runs/
-Tennis Ball Detection/
 models/
 downloaded_youtube_videos/
 assets/
+tennis_ball_dataset_1/
+tennis_ball_dataset_2/
+combined_tennis_ball_dataset/
 
 # Python cache and environments
 __pycache__/
