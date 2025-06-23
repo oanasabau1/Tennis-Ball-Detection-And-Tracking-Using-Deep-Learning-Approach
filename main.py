@@ -8,7 +8,7 @@ from mini_court import MiniCourt
 from trackers import TennisBallTracker
 from bounding_boxes import measure_distance
 from utils import convert_pixel_distance_to_meters
-from analysis_of_tennis_ball import create_heatmap_visualization, detect_ball_hits
+from analysis_of_tennis_ball import create_heatmap, detect_ball_hits
 
 
 def main(video_path):
@@ -16,7 +16,7 @@ def main(video_path):
     video_frames = read_video(input_video_path)
 
     tennis_ball_tracker = TennisBallTracker(
-        model_path="D:\\tennis_thesis\\runs\\detect\\tennis_ball_detection_yolov5m.pt\\weights\\best.pt"
+        model_path="D:/tennis_thesis/runs/train/tennis_ball_yolov5m/weights/best.pt"
     )
     stub_path = f"tracker_stub/tennis_ball_detections_for_{video_path}.pkl"
     read_from_stub = os.path.exists(stub_path)
@@ -73,12 +73,12 @@ def main(video_path):
     for i, frame in enumerate(output_video_frames):
         cv2.putText(frame, f"Frame: {i}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
 
-    output_dir = f"outputs/{video_path}"
+    output_dir = f"output_videos/{video_path}"
     os.makedirs(output_dir, exist_ok=True)
     save_video(output_video_frames, f"{output_dir}/{video_path}.avi")
     save_video(mini_court_frames, f"{output_dir}/mini_court_for_{video_path}.avi")
 
-    create_heatmap_visualization(video_name=video_path, output_dir=output_dir)
+    create_heatmap(video_name=video_path, output_dir=output_dir)
     hits = detect_ball_hits(video_name=video_path)
 
 

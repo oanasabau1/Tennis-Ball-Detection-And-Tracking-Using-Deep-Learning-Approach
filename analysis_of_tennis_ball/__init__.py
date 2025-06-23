@@ -1,2 +1,2 @@
-from .heatmap_visualization import create_heatmap_visualization
+from .heatmap_visualization import create_heatmap
 from .tennis_ball_analysis import detect_ball_hits
