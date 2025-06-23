@@ -14,6 +14,7 @@ tennis_ball_dataset_1/
 tennis_ball_dataset_2/
 combined_tennis_ball_dataset/
 runs/
+models/
 
 
 # Python cache and environments
