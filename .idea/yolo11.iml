@@ -15,6 +15,7 @@
       <excludeFolder url="file://$MODULE_DIR$/models" />
       <excludeFolder url="file://$MODULE_DIR$/tennis_ball_dataset_1" />
       <excludeFolder url="file://$MODULE_DIR$/tennis_ball_dataset_2" />
+      <excludeFolder url="file://$MODULE_DIR$/downloaded_youtube_videos" />
     </content>
     <orderEntry type="jdk" jdkName="tennis-ball-detection-env" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
