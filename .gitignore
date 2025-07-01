@@ -17,6 +17,8 @@ combined_tennis_ball_dataset/
 runs/
 models/
 
+!models/best.pt
+!models/tennis_court_keypoints_model.pth
 
 # Python cache and environments
 __pycache__/
