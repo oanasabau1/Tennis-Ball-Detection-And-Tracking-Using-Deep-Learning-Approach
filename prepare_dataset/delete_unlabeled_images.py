@@ -20,7 +20,7 @@ for split in splits:
             img_path = os.path.join(img_dir, fname)
             try:
                 os.remove(img_path)
-                print(f"🗑 Deleted: {img_path}")
+                print(f"Deleted: {img_path}")
                 deleted_count += 1
             except Exception as e:
                 print(f"Error deleting {img_path}: {e}")

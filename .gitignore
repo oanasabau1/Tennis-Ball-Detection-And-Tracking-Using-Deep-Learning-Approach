@@ -5,6 +5,7 @@
 
 # Ignore folders
 input_videos/
+output_videos/
 outputs/
 tracker_stub/
 data/

@@ -100,20 +100,16 @@ class TennisAnalysisApp:
     def create_main_ui(self):
         self.clear_root()
 
-        # Styles applied once here for clarity
         style = ttk.Style()
         style.configure("TLabel", font=("Verdana", 12))
         style.configure("SectionTitle.TLabel", font=("Verdana", 14, "bold"))
 
-        # Main container
         main_frame = ttk.Frame(self.root, padding=10)
         main_frame.pack(fill="both", expand=True)
 
-        # Top section
         top_frame = ttk.Frame(main_frame)
         top_frame.pack(fill="x", pady=(0, 10))
 
-        # Controls on the left
         controls_frame = ttk.LabelFrame(top_frame, text="Controls", bootstyle="default", padding=10)
         controls_frame.pack(side="left", padx=(0, 20))
 
@@ -125,7 +121,6 @@ class TennisAnalysisApp:
                                   bootstyle="success-outline", width=25)
         self.btn_run.pack(pady=5)
 
-        # Info on the right
         info_frame = ttk.Frame(top_frame)
         info_frame.pack(side="left", fill="x", expand=True)
 
@@ -135,7 +130,6 @@ class TennisAnalysisApp:
         self.status_label = ttk.Label(info_frame, text="", style="TLabel")
         self.status_label.pack(anchor="w", pady=5)
 
-        # Middle section for videos
         video_container = ttk.LabelFrame(main_frame, text="Video Analysis", bootstyle="default", padding=10)
         video_container.pack(fill="both", expand=True, pady=10)
 
@@ -145,7 +139,6 @@ class TennisAnalysisApp:
         video_frame.columnconfigure(1, weight=1)
         video_frame.rowconfigure(0, weight=1)
 
-        # Output video on the left
         output_frame = ttk.Frame(video_frame, padding=5)
         output_frame.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)
         output_frame.columnconfigure(0, weight=1)
@@ -155,7 +148,6 @@ class TennisAnalysisApp:
         self.output_label = ttk.Label(output_frame, borderwidth=2, relief="groove")
         self.output_label.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
 
-        # Court analysis on the right
         mini_frame = ttk.Frame(video_frame, padding=5)
         mini_frame.grid(row=0, column=1, sticky="nsew", padx=5, pady=5)
         mini_frame.columnconfigure(0, weight=1)
@@ -165,7 +157,6 @@ class TennisAnalysisApp:
         self.mini_label = ttk.Label(mini_frame, borderwidth=2, relief="groove")
         self.mini_label.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
 
-        # Bottom section for analysis results
         speed_frame = ttk.LabelFrame(main_frame, text="Shot Analysis", bootstyle="primary", padding=10)
         speed_frame.pack(fill="x", pady=10)
 
@@ -175,12 +166,10 @@ class TennisAnalysisApp:
         )
         self.speed_box.pack(padx=10, pady=10, fill='both')
 
-        # Advanced results button
-        self.advanced_btn = ttk.Button(main_frame, text="See Advanced Results", command=self.show_heatmap,
+        self.advanced_btn = ttk.Button(main_frame, text="See Advanced Results", command=self.show_graphics,
                                        bootstyle="info-outline", width=25, state="disabled")
         self.advanced_btn.pack(pady=(0, 10))
 
-        # Event handlers
         self.root.bind("<Escape>",
                        lambda e: self.root.protocol("WM_RESIZE_WINDOW", self.root.attributes('-fullscreen', False)))
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
@@ -259,7 +248,6 @@ class TennisAnalysisApp:
             messagebox.showerror("File Error", "The selected file does not exist.")
             return
 
-        # Clear displays
         self.output_label.config(image='')
         self.mini_label.config(image='')
         self.speed_box.delete(1.0, 'end')
@@ -267,8 +255,6 @@ class TennisAnalysisApp:
 
         self.video_path = path
         self.video_name = os.path.splitext(os.path.basename(path))[0]
-
-
 
         os.makedirs("input_videos", exist_ok=True)
         dest = os.path.join("input_videos", f"{self.video_name}.mp4")
@@ -300,7 +286,7 @@ class TennisAnalysisApp:
 
     def run_analysis(self):
         if not self.video_name:
-            messagebox.showwarning("No Video", "Please load or download a video first.")
+            messagebox.showwarning("Warning", "Please choose a video first or wait for the download to finish.")
             return
 
         self.speed_box.delete(1.0, 'end')
@@ -341,7 +327,6 @@ class TennisAnalysisApp:
             self.status_label.config(text="Analysis complete.", foreground="green")
             self.advanced_btn.config(state="normal")
             self.play_both_videos()
-
 
         except Exception as e:
             self.speed_box.insert('end', f"\nError: {e}")
@@ -400,7 +385,7 @@ class TennisAnalysisApp:
 
         self.video_loop = self.root.after(40, self.show_frames)
 
-    def show_heatmap(self):
+    def show_graphics(self):
         if not self.video_name:
             messagebox.showwarning("No Video", "Please run analysis first.")
             return
@@ -417,14 +402,11 @@ class TennisAnalysisApp:
             messagebox.showerror("Not Found", "One or more additional plots not found. Please run analysis first.")
             return
 
-        # Heatmap window
         self._open_image_window(heatmap_path, "Mini-Court Heatmap", (400, 800))
 
-        # Smoothed Vertical Movement window
-        self._open_image_window(smoothed_path, "Smoothed Vertical Ball Movement", (500, 600))
+        self._open_image_window(smoothed_path, "Smoothed Vertical Ball Movement", (600, 500))
 
-        # Delta Y window
-        self._open_image_window(delta_y_path, "Delta Y between Frames", (500, 600))
+        self._open_image_window(delta_y_path, "Delta Y between Frames", (600, 500))
 
     def _open_image_window(self, image_path, window_title, size):
         img = Image.open(image_path).resize(size, Image.Resampling.LANCZOS)

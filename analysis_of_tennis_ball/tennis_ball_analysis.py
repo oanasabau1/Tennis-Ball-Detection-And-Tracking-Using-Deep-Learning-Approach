@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib
 import os
 
-matplotlib.use('Agg')  # Use non-GUI backend for saving plots
+matplotlib.use('Agg')
 
 
 def detect_ball_hits(video_name):
